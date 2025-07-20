@@ -1,0 +1,18 @@
+[package]
+name = "kepub"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "kepub"
+path = "src/bin/main.rs"
+
+[lib]
+name = "kepub"
+path = "src/lib.rs"
+
+[dependencies]
+anyhow = "1.0"
+tokio = { version = "1.46", features = ["macros", "rt", "rt-multi-thread", "sync"] }
+xml-rs = "0.8"
+zip = "4.3"
