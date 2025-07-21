@@ -6,6 +6,10 @@ use kepub::epub::Epub;
 async fn main() -> Result<()> {
     let epub = Epub::open("fixtures/file.epub")?;
     let isbn = epub.isbn();
+    let toc = epub.toc();
+
+    println!("{isbn:?}");
+    println!("{toc:?}");
 
     Ok(())
 }

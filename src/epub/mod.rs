@@ -43,6 +43,14 @@ impl Epub {
         &self.toc.meta.uid
     }
 
+    pub fn toc(&self) -> &Toc {
+        &self.toc
+    }
+
+    pub fn mic(&self) -> &MetaInfContainer {
+        &self.mic
+    }
+
     // pub async fn check(&self) -> Result<()> {
     //     let mut archive = self.archive.lock().await;
     //     let xml_reader = EventReader::new(archive.by_name(TOC_NCX)?);
