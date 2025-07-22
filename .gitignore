@@ -1,5 +1,8 @@
 /target
 
+# System
+.DS_Store
+
 # Test Files
 *.epub
 *.ncx
