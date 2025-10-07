@@ -122,7 +122,6 @@ impl ContentOpf {
         const TOP_LEVEL_OPF_PATH: &str = "content.opf";
         const DEFAULT_OPF_PATH: &str = "OEBPS/content.opf";
         const ALTERNATIVE_OPF_PATH: &str = "OPS/content.opf";
-        const DIRECT_OPF_PATH: &str = "content.opf";
 
         let opf_path = mic.rootfiles[0].full_path.to_str();
 
@@ -139,10 +138,6 @@ impl ContentOpf {
 
         if zip.by_name(ALTERNATIVE_OPF_PATH).is_ok() {
             return Ok(ALTERNATIVE_OPF_PATH.to_string());
-        }
-
-        if zip.by_name(DIRECT_OPF_PATH).is_ok() {
-            return Ok(DIRECT_OPF_PATH.to_string());
         }
 
         if zip.by_name(TOP_LEVEL_OPF_PATH).is_ok() {
