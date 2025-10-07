@@ -1,3 +1,4 @@
+use std::fs::rename;
 use std::path::PathBuf;
 
 use clap::Args;
@@ -43,9 +44,11 @@ impl InfoCmd {
                 .creator
                 .replace("/", "-")
                 .replace("\\", "-");
-            let new_file_name = format!("{} - {}.{}", safe_creator, safe_title, extension);
+            let new_file_name = format!("{} - {}.{}", safe_title, safe_creator, extension);
             let new_path = parent.join(new_file_name);
-            std::fs::rename(&self.path, &new_path)?;
+
+            rename(&self.path, &new_path)?;
+
             println!("Renamed file to: {}", new_path.display());
         }
 

@@ -1,7 +1,10 @@
-use anyhow::Result;
-use xml::reader::{EventReader, XmlEvent};
+use std::fs::File;
 
-pub const CONTENT_OPF: &str = "OEBPS/content.opf";
+use anyhow::{Result, bail};
+use xml::reader::{EventReader, XmlEvent};
+use zip::ZipArchive;
+
+use crate::epub::MetaInfContainer;
 
 #[derive(Debug, Default)]
 pub struct Metadata {
@@ -23,6 +26,9 @@ pub struct SpineItem {
     pub idref: String,
 }
 
+/// ContentOpf represents the `content.opf` file in an EPUB archive.
+/// It can either be a file in the path: `OEBPS/content.opf` or
+/// `OEBPS/{ISBN}.opf`
 #[derive(Debug)]
 pub struct ContentOpf {
     pub metadata: Metadata,
@@ -110,5 +116,39 @@ impl ContentOpf {
         }
 
         Ok(content_opf)
+    }
+
+    pub fn resolve_opf_file(zip: &mut ZipArchive<File>, mic: &MetaInfContainer) -> Result<String> {
+        const TOP_LEVEL_OPF_PATH: &str = "content.opf";
+        const DEFAULT_OPF_PATH: &str = "OEBPS/content.opf";
+        const ALTERNATIVE_OPF_PATH: &str = "OPS/content.opf";
+        const DIRECT_OPF_PATH: &str = "content.opf";
+
+        let opf_path = mic.rootfiles[0].full_path.to_str();
+
+        if let Some(opf_path) = opf_path
+            && opf_path.ends_with("opf")
+            && zip.by_name(opf_path).is_ok()
+        {
+            return Ok(opf_path.to_string());
+        }
+
+        if zip.by_name(DEFAULT_OPF_PATH).is_ok() {
+            return Ok(DEFAULT_OPF_PATH.to_string());
+        }
+
+        if zip.by_name(ALTERNATIVE_OPF_PATH).is_ok() {
+            return Ok(ALTERNATIVE_OPF_PATH.to_string());
+        }
+
+        if zip.by_name(DIRECT_OPF_PATH).is_ok() {
+            return Ok(DIRECT_OPF_PATH.to_string());
+        }
+
+        if zip.by_name(TOP_LEVEL_OPF_PATH).is_ok() {
+            return Ok(TOP_LEVEL_OPF_PATH.to_string());
+        }
+
+        bail!("Failed to resolve OPF file path")
     }
 }

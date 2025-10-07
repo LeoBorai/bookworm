@@ -13,8 +13,7 @@ use tokio::sync::Mutex;
 use zip::ZipArchive;
 
 use crate::epub::container::CONTAINER_XML;
-use crate::epub::content_opf::{CONTENT_OPF, ContentOpf};
-use crate::epub::toc::TOC_NCX;
+use crate::epub::content_opf::ContentOpf;
 use crate::util::zip::get_file_bytes;
 
 #[derive(Debug)]
@@ -32,9 +31,11 @@ impl Epub {
         let mut archive = ZipArchive::new(file)?;
         let container_xml = get_file_bytes(&mut archive, CONTAINER_XML)?;
         let mic = MetaInfContainer::new(container_xml)?;
-        let toc_ncx = get_file_bytes(&mut archive, TOC_NCX)?;
+        let toc_ncx_path = Toc::resolve_toc_ncx_file(&mut archive)?;
+        let toc_ncx = get_file_bytes(&mut archive, &toc_ncx_path)?;
         let toc = Toc::new(toc_ncx)?;
-        let content_opf_bytes = get_file_bytes(&mut archive, CONTENT_OPF)?;
+        let opf_path = ContentOpf::resolve_opf_file(&mut archive, &mic)?;
+        let content_opf_bytes = get_file_bytes(&mut archive, &opf_path)?;
         let content_opf = ContentOpf::new(content_opf_bytes)?;
 
         Ok(Epub {
