@@ -1,15 +1,41 @@
+mod cmd;
+
 use anyhow::Result;
 
-use kepub::epub::Epub;
+use clap::Parser;
+
+use crate::cmd::info::InfoCmd;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let epub = Epub::open("fixtures/file.epub")?;
-    let isbn = epub.isbn();
-    let toc = epub.toc();
-
-    println!("{isbn:?}");
-    println!("{toc:?}");
-
+    let cli = Cli::parse();
+    cli.command.exec().await?;
     Ok(())
+}
+
+#[derive(Debug, Parser)]
+pub struct Cli {
+    #[command(subcommand)]
+    command: Command,
+}
+
+#[derive(Debug, Parser)]
+#[command(
+    name = "kepub",
+    about = "Rakuten Kobo's k/epub utilities",
+    author = "Leo Borai <estebanborai@gmail.com> (https://github.com/LeoBorai/kepub)",
+    max_term_width = 100,
+    next_line_help = true
+)]
+pub enum Command {
+    /// Retrieve (K)Epub File Information
+    Info(InfoCmd),
+}
+
+impl Command {
+    pub async fn exec(self) -> Result<()> {
+        match self {
+            Self::Info(cmd) => cmd.exec().await,
+        }
+    }
 }
