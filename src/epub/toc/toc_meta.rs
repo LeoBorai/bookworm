@@ -31,10 +31,10 @@ impl TryFrom<Vec<u8>> for TocMeta {
                                 .iter()
                                 .find(|attr| attr.name.local_name == "content");
 
-                            if let (Some(name), Some(content)) = (name_attr, content_attr) {
-                                if name.value == "dtb:uid" {
-                                    uid = content.value.clone();
-                                }
+                            if let (Some(name), Some(content)) = (name_attr, content_attr)
+                                && name.value == "dtb:uid"
+                            {
+                                uid = content.value.clone();
                             }
                         }
                     }

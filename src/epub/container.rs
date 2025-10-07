@@ -27,31 +27,29 @@ impl MetaInfContainer {
         let mut rootfiles: Vec<RootFile> = Vec::new();
 
         for maybe_event in xml_reader {
-            if let Ok(event) = maybe_event {
-                if let XmlEvent::StartElement {
+            if let Ok(event) = maybe_event
+                && let XmlEvent::StartElement {
                     name, attributes, ..
                 } = event
-                {
-                    if name.local_name == "rootfile" {
-                        let media_type = attributes
-                            .iter()
-                            .find(|attr| attr.name.local_name == "media-type")
-                            .map_or_else(
-                                || "application/oebps-package+xml".to_string(),
-                                |attr| attr.value.clone(),
-                            );
+                && name.local_name == "rootfile"
+            {
+                let media_type = attributes
+                    .iter()
+                    .find(|attr| attr.name.local_name == "media-type")
+                    .map_or_else(
+                        || "application/oebps-package+xml".to_string(),
+                        |attr| attr.value.clone(),
+                    );
 
-                        let full_path = attributes
-                            .iter()
-                            .find(|attr| attr.name.local_name == "full-path")
-                            .map_or_else(|| PathBuf::from(""), |attr| PathBuf::from(&attr.value));
+                let full_path = attributes
+                    .iter()
+                    .find(|attr| attr.name.local_name == "full-path")
+                    .map_or_else(|| PathBuf::from(""), |attr| PathBuf::from(&attr.value));
 
-                        rootfiles.push(RootFile {
-                            media_type,
-                            full_path: full_path.clone(),
-                        });
-                    }
-                }
+                rootfiles.push(RootFile {
+                    media_type,
+                    full_path: full_path.clone(),
+                });
             }
         }
 

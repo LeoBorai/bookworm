@@ -17,22 +17,20 @@ impl TryFrom<Vec<u8>> for DocTitle {
         let mut in_doc_title = false;
         let mut title = String::new();
 
-        for maybe_event in xml_reader {
-            if let Ok(event) = maybe_event {
-                match event {
-                    XmlEvent::StartElement { name, .. } => {
-                        if name.local_name == "docTitle" {
-                            in_doc_title = true;
-                        }
+        for event in xml_reader.into_iter().flatten() {
+            match event {
+                XmlEvent::StartElement { name, .. } => {
+                    if name.local_name == "docTitle" {
+                        in_doc_title = true;
                     }
-                    XmlEvent::Characters(text) => {
-                        if in_doc_title {
-                            title = text;
-                            break;
-                        }
-                    }
-                    _ => {}
                 }
+                XmlEvent::Characters(text) => {
+                    if in_doc_title {
+                        title = text;
+                        break;
+                    }
+                }
+                _ => {}
             }
         }
 
