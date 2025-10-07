@@ -1,4 +1,5 @@
 mod container;
+mod content_opf;
 mod toc;
 
 pub use container::{MetaInfContainer, RootFile};
@@ -12,14 +13,17 @@ use tokio::sync::Mutex;
 use zip::ZipArchive;
 
 use crate::epub::container::CONTAINER_XML;
+use crate::epub::content_opf::{CONTENT_OPF, ContentOpf};
 use crate::epub::toc::TOC_NCX;
 use crate::util::zip::get_file_bytes;
 
 #[derive(Debug)]
 pub struct Epub {
+    #[allow(unused)]
     archive: Mutex<ZipArchive<File>>,
     mic: MetaInfContainer,
     toc: Toc,
+    content_opf: ContentOpf,
 }
 
 impl Epub {
@@ -30,11 +34,14 @@ impl Epub {
         let mic = MetaInfContainer::new(container_xml)?;
         let toc_ncx = get_file_bytes(&mut archive, TOC_NCX)?;
         let toc = Toc::new(toc_ncx)?;
+        let content_opf_bytes = get_file_bytes(&mut archive, CONTENT_OPF)?;
+        let content_opf = ContentOpf::new(content_opf_bytes)?;
 
         Ok(Epub {
             archive: Mutex::new(archive),
             mic,
             toc,
+            content_opf,
         })
     }
 
@@ -49,6 +56,10 @@ impl Epub {
 
     pub fn mic(&self) -> &MetaInfContainer {
         &self.mic
+    }
+
+    pub fn content_opf(&self) -> &ContentOpf {
+        &self.content_opf
     }
 
     // pub async fn check(&self) -> Result<()> {
