@@ -5,3 +5,5 @@
   <h1>kobook</h1>
   <small>Rakuten Kobo's k/epub utilities</small>
 </div>
+
+Should follow: https://github.com/kobolabs/epub-spec
