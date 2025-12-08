@@ -4,7 +4,7 @@ use anyhow::Result;
 
 use clap::Parser;
 
-use crate::cmd::info::InfoCmd;
+use crate::cmd::{convert::ConvertCmd, info::InfoCmd};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -30,12 +30,15 @@ pub struct Cli {
 pub enum Command {
     /// Retrieve (K)Epub File Information
     Info(InfoCmd),
+    /// Convert PDF to (K)Epub
+    Convert(ConvertCmd),
 }
 
 impl Command {
     pub async fn exec(self) -> Result<()> {
         match self {
             Self::Info(cmd) => cmd.exec().await,
+            Self::Convert(cmd) => cmd.exec().await,
         }
     }
 }
