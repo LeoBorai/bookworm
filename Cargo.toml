@@ -1,14 +1,14 @@
 [package]
-name = "kepub"
+name = "bookworm"
 version = "0.1.0"
 edition = "2024"
 
 [[bin]]
-name = "kepub"
+name = "bookworm"
 path = "src/bin/main.rs"
 
 [lib]
-name = "kepub"
+name = "bookworm"
 path = "src/lib.rs"
 
 [dependencies]

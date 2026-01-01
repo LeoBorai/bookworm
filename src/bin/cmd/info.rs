@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use clap::Args;
 
-use kepub::epub::Epub;
+use bookworm::epub::Epub;
 
 #[derive(Args, Clone, Debug)]
 pub struct InfoCmd {

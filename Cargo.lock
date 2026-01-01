@@ -124,6 +124,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "bookworm"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "tokio",
+ "xml-rs",
+ "zip",
+]
+
+[[package]]
 name = "bumpalo"
 version = "3.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -392,17 +403,6 @@ checksum = "38f262f097c174adebe41eb73d66ae9c06b2844fb0da69969647bbddd9b0538a"
 dependencies = [
  "getrandom",
  "libc",
-]
-
-[[package]]
-name = "kepub"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "clap",
- "tokio",
- "xml-rs",
- "zip",
 ]
 
 [[package]]
