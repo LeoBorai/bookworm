@@ -13,7 +13,7 @@ pub enum EpubCmd {
     /// Retrieve (K)Epub File Information
     Info(InfoOpt),
     /// Package (K)Epub File
-    Package(PackageOpt),
+    Pkg(PackageOpt),
     /// Unpackage (K)Epub File
     Unpkg(UnPackageOpt),
 }
@@ -22,7 +22,7 @@ impl EpubCmd {
     pub async fn exec(&self) -> anyhow::Result<()> {
         match self {
             Self::Info(cmd) => cmd.exec().await,
-            Self::Package(cmd) => cmd.exec().await,
+            Self::Pkg(cmd) => cmd.exec().await,
             Self::Unpkg(cmd) => cmd.exec().await,
         }
     }
