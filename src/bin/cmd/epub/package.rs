@@ -28,7 +28,7 @@ impl PackageOpt {
                     .and_then(|stem| stem.to_str())
                     .ok_or_else(|| anyhow::anyhow!("Failed to get file stem"))?;
 
-                parent.join(file_stem).with_extension(".epub")
+                parent.join(file_stem).with_extension("epub")
             }
         };
 
