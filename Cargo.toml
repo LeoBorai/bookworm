@@ -1,7 +1,15 @@
 [package]
 name = "bookworm"
-version = "0.1.0"
 edition = "2024"
+version = "1.0.0-pre.cfad518"
+authors = ["Leo Borai <estebanborai@gmail.com>"]
+categories = ["web-programming"]
+description = "Simple and configurable command-line HTTP server"
+documentation = "https://docs.rs/bookworm"
+keywords = ["book", "pdf", "ebook", "kepub", "utils"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/LeoBorai/bookworm"
+readme = "./README.md"
 
 [[bin]]
 name = "bookworm"

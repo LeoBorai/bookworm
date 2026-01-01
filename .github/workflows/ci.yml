@@ -1,0 +1,26 @@
+name: Continuous Integration
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  cq:
+    name: Codebase Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Run Formatter Check
+        run: cargo fmt --all -- --check
+
+      - name: Run Clippy Check
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Run Tests
+        run: cargo test --all-features
