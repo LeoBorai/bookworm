@@ -5,5 +5,3 @@
   <h1>BookWorm</h1>
   <small>Utilities to manage your ebook collection (PDFs, ePubs, KePubs, and more)</small>
 </div>
-
-Should follow: https://github.com/kobolabs/epub-spec
