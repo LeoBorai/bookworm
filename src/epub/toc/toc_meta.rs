@@ -17,34 +17,32 @@ impl TryFrom<Vec<u8>> for TocMeta {
         let xml_reader = EventReader::new(cursor);
         let mut uid = String::new();
 
-        for maybe_event in xml_reader {
-            if let Ok(event) = maybe_event {
-                match event {
-                    XmlEvent::StartElement {
-                        name, attributes, ..
-                    } => {
-                        if name.local_name == "meta" {
-                            let name_attr = attributes
-                                .iter()
-                                .find(|attr| attr.name.local_name == "name");
-                            let content_attr = attributes
-                                .iter()
-                                .find(|attr| attr.name.local_name == "content");
+        for event in xml_reader.into_iter().flatten() {
+            match event {
+                XmlEvent::StartElement {
+                    name, attributes, ..
+                } => {
+                    if name.local_name == "meta" {
+                        let name_attr = attributes
+                            .iter()
+                            .find(|attr| attr.name.local_name == "name");
+                        let content_attr = attributes
+                            .iter()
+                            .find(|attr| attr.name.local_name == "content");
 
-                            if let (Some(name), Some(content)) = (name_attr, content_attr)
-                                && name.value == "dtb:uid"
-                            {
-                                uid = content.value.clone();
-                            }
+                        if let (Some(name), Some(content)) = (name_attr, content_attr)
+                            && name.value == "dtb:uid"
+                        {
+                            uid = content.value.clone();
                         }
                     }
-                    XmlEvent::EndElement { name } => {
-                        if name.local_name == "ncx" {
-                            break; // End of the toc.ncx file
-                        }
-                    }
-                    _ => {}
                 }
+                XmlEvent::EndElement { name } => {
+                    if name.local_name == "ncx" {
+                        break; // End of the toc.ncx file
+                    }
+                }
+                _ => {}
             }
         }
 
