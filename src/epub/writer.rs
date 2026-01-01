@@ -5,8 +5,6 @@ use std::path::{Path, PathBuf};
 use anyhow::{Result, bail};
 use zip::write::{ExtendedFileOptions, FileOptions, ZipWriter};
 
-use crate::epub::Epub;
-
 pub struct EpubWriter {
     source: PathBuf,
     zip_writer: ZipWriter<File>,
