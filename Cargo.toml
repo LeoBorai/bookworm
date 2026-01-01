@@ -1,7 +1,7 @@
 [package]
 name = "bookworm"
 edition = "2024"
-version = "1.0.0-pre.4121a0f"
+version = "1.0.0-pre.6b11b43"
 authors = ["Leo Borai <estebanborai@gmail.com>"]
 categories = ["web-programming"]
 description = "Utilities to manage your ebook collection (PDFs, ePubs, KePubs, and more)"
