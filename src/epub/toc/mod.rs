@@ -51,19 +51,20 @@ impl Toc {
     }
 }
 
-#[cfg(test)]
-mod test {
-    use super::*;
+// Enable tests when fixtures with Creative Commons license are available
+// #[cfg(test)]
+// mod test {
+//     use super::*;
 
-    const TOC_NCX_BYTES: &[u8] = include_bytes!("../../../fixtures/toc.ncx");
+//     const TOC_NCX_BYTES: &[u8] = include_bytes!("../../../fixtures/toc.ncx");
 
-    #[tokio::test]
-    async fn parses_toc_ncx() -> Result<()> {
-        let toc = Toc::new(TOC_NCX_BYTES.to_vec())?;
+//     #[tokio::test]
+//     async fn parses_toc_ncx() -> Result<()> {
+//         let toc = Toc::new(TOC_NCX_BYTES.to_vec())?;
 
-        assert_eq!(toc.meta.uid, "9781098166304");
-        assert_eq!(toc.doc_title.title, "AI Engineering");
+//         assert_eq!(toc.meta.uid, "9781098166304");
+//         assert_eq!(toc.doc_title.title, "AI Engineering");
 
-        Ok(())
-    }
-}
+//         Ok(())
+//     }
+// }

@@ -21,8 +21,8 @@ pub struct Cli {
 
 #[derive(Debug, Parser)]
 #[command(
-    name = "bw",
-    about = "Digital book utilities",
+    name = "bookworm",
+    about = "Utilities to manage your ebook collection (PDFs, ePubs, KePubs, and more)",
     author = "Leo Borai <estebanborai@gmail.com> (https://github.com/LeoBorai/bookworm)",
     max_term_width = 100,
     next_line_help = true

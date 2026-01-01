@@ -62,28 +62,4 @@ impl Epub {
     pub fn content_opf(&self) -> &ContentOpf {
         &self.content_opf
     }
-
-    // pub async fn check(&self) -> Result<()> {
-    //     let mut archive = self.archive.lock().await;
-    //     let xml_reader = EventReader::new(archive.by_name(TOC_NCX)?);
-
-    //     for event in xml_reader {
-    //         println!("{event:?}");
-    //         // match event? {
-    //         //     XmlEvent::StartElement { name, .. } => {
-    //         //         if name.local_name == "container" {
-    //         //             return Ok(());
-    //         //         }
-    //         //     }
-    //         //     XmlEvent::EndElement { name } => {
-    //         //         if name.local_name == "container" {
-    //         //             return Ok(());
-    //         //         }
-    //         //     }
-    //         //     _ => {}
-    //         // }
-    //     }
-
-    //     Err(anyhow::anyhow!("Invalid EPUB format: missing container element"))
-    // }
 }
