@@ -1,6 +1,6 @@
 <div align="center">
   <figure>
-      <img src="./docs/bookworm.png" height="80px" width="auto" />
+      <img src="https://raw.githubusercontent.com/LeoBorai/bookworm/refs/heads/main/docs/bookworm.png" height="80px" width="auto" />
   </figure>
   <h1>BookWorm</h1>
   <small>Utilities to manage your ebook collection (PDFs, ePubs, KePubs, and more)</small>
