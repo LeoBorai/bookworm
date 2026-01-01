@@ -1,9 +1,11 @@
 mod container;
 mod content_opf;
 mod toc;
+mod writer;
 
 pub use container::{MetaInfContainer, RootFile};
 pub use toc::{Toc, TocMeta};
+pub use writer::EpubWriter;
 
 use std::fs::File;
 use std::path::{Path, PathBuf};
