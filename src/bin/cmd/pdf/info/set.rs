@@ -58,6 +58,7 @@ impl SetOpt {
         }
 
         let next_path = self.path.with_file_name("set_info.pdf");
+
         pdf.save(next_path)?;
 
         Ok(())

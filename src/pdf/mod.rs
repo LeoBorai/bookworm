@@ -3,7 +3,7 @@ use std::{
     str::FromStr,
 };
 
-use anyhow::{Result, bail};
+use anyhow::Result;
 use lopdf::{Dictionary, Document, Object};
 
 const PDF_META_INFO_KEY: &[u8] = b"Info";
@@ -136,10 +136,6 @@ impl Pdf {
     }
 
     pub fn save<P: AsRef<Path>>(&mut self, path: P) -> Result<()> {
-        if self.path == path.as_ref() {
-            bail!("Cannot overwrite source file");
-        }
-
         self.doc.save(&path)?;
         Ok(())
     }
