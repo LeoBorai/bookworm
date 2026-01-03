@@ -136,10 +136,8 @@ impl Pdf {
     }
 
     pub fn save<P: AsRef<Path>>(&mut self, path: P) -> Result<()> {
-        self.doc.save(&path)?;
-        Ok(())
+        self.doc.save(&path)
     }
-
     fn create_info_dictionary(doc: &mut Document) -> Result<(u32, u16)> {
         let info_dict = Dictionary::new();
         let info_id = doc.add_object(Object::Dictionary(info_dict));
