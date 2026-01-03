@@ -3,12 +3,13 @@ mod info;
 use anyhow::Result;
 use clap::Subcommand;
 
-use self::info::InfoOpt;
+use self::info::InfoCmd;
 
 #[derive(Clone, Debug, Subcommand)]
 pub enum PdfCmd {
+    #[clap(subcommand)]
     /// Retrieve PDF File Information
-    Info(InfoOpt),
+    Info(InfoCmd),
 }
 
 impl PdfCmd {

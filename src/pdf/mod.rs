@@ -1,7 +1,7 @@
 use std::path::Path;
 
 use anyhow::Result;
-use lopdf::Document;
+use lopdf::{Dictionary, Document, Object};
 
 const PDF_META_INFO_KEY: &[u8] = b"Info";
 const PDF_META_TITLE_KEY: &[u8] = b"Title";
@@ -62,5 +62,34 @@ impl Pdf {
             .ok()
             .and_then(|value| value.as_str().ok())
             .map(|bytes| String::from_utf8_lossy(bytes).to_string())
+    }
+
+    pub fn set_metadata(&self, key: &str, value: &str) -> Result<()> {
+        let mut doc = self.doc.clone();
+        let info_id = if let Some(info_ref) = doc.trailer.get(PDF_META_INFO_KEY).ok() {
+            match info_ref {
+                Object::Reference(id) => *id,
+                _ => Self::create_info_dictionary(&mut doc)?,
+            }
+        } else {
+            Self::create_info_dictionary(&mut doc)?
+        };
+
+        if let Ok(info_obj) = doc.get_object_mut(info_id) {
+            if let Ok(dict) = info_obj.as_dict_mut() {
+                dict.set(key, Object::string_literal(value));
+            }
+        }
+
+        doc.save("updated.pdf")?;
+
+        Ok(())
+    }
+
+    fn create_info_dictionary(doc: &mut Document) -> Result<(u32, u16)> {
+        let info_dict = Dictionary::new();
+        let info_id = doc.add_object(Object::Dictionary(info_dict));
+        doc.trailer.set("Info", Object::Reference(info_id));
+        Ok(info_id)
     }
 }
