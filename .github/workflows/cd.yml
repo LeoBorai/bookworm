@@ -194,7 +194,7 @@ jobs:
 
           # Create the release
           gh release create "${{ env.CRATE_VERSION }}" \
-            --title "Release ${{ env.CRATE_VERSION }}" \
+            --title "${{ env.CRATE_VERSION }}" \
             --generate-notes \
             $IS_PRERELEASE
 
