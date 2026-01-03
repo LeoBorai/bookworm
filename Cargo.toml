@@ -24,5 +24,5 @@ anyhow = "1.0"
 clap = { version = "4.5", features = ["std", "derive", "env"] }
 lopdf = "0.38"
 tokio = { version = "1.49", features = ["macros", "rt", "rt-multi-thread", "sync"] }
-xml-rs = "0.8"
+xml-rs = "1.0"
 zip = "7"

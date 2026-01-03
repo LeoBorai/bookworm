@@ -1289,10 +1289,19 @@ dependencies = [
 ]
 
 [[package]]
-name = "xml-rs"
-version = "0.8.27"
+name = "xml"
+version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6fd8403733700263c6eb89f192880191f1b83e332f7a20371ddcf421c4a337c7"
+checksum = "2df5825faced2427b2da74d9100f1e2e93c533fff063506a81ede1cf517b2e7e"
+
+[[package]]
+name = "xml-rs"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c3a56132a0d6ecbe77352edc10232f788fc4ceefefff4cab784a98e0e16b6b51"
+dependencies = [
+ "xml",
+]
 
 [[package]]
 name = "zerocopy"
