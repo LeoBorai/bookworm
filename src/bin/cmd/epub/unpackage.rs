@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use anyhow::Result;
 use clap::Args;
 
 use bookworm::epub::Epub;
@@ -14,7 +15,7 @@ pub struct UnPackageOpt {
 }
 
 impl UnPackageOpt {
-    pub async fn exec(&self) -> anyhow::Result<()> {
+    pub async fn exec(&self) -> Result<()> {
         let outdir = match &self.output {
             Some(dir) => dir.clone(),
             None => {

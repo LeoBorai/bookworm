@@ -4,7 +4,7 @@ use anyhow::Result;
 
 use clap::Parser;
 
-use crate::cmd::epub::EpubCmd;
+use crate::cmd::{epub::EpubCmd, pdf::PdfCmd};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -31,12 +31,16 @@ pub enum Command {
     /// Manage EPUB Files
     #[clap(subcommand)]
     Epub(EpubCmd),
+    /// Manage PDF Files
+    #[clap(subcommand)]
+    Pdf(PdfCmd),
 }
 
 impl Command {
     pub async fn exec(self) -> Result<()> {
         match self {
             Self::Epub(cmd) => cmd.exec().await,
+            Self::Pdf(cmd) => cmd.exec().await,
         }
     }
 }

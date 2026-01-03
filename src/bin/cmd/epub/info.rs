@@ -1,6 +1,7 @@
 use std::fs::rename;
 use std::path::PathBuf;
 
+use anyhow::Result;
 use clap::Args;
 
 use bookworm::epub::Epub;
@@ -15,7 +16,7 @@ pub struct InfoOpt {
 }
 
 impl InfoOpt {
-    pub async fn exec(&self) -> anyhow::Result<()> {
+    pub async fn exec(&self) -> Result<()> {
         let epub = Epub::open(&self.path)?;
         let content_opf = epub.content_opf();
 
