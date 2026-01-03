@@ -1,12 +1,14 @@
 mod container;
 mod content_opf;
 mod toc;
+mod writer;
 
 pub use container::{MetaInfContainer, RootFile};
 pub use toc::{Toc, TocMeta};
+pub use writer::EpubWriter;
 
 use std::fs::File;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use anyhow::Result;
 use tokio::sync::Mutex;
@@ -16,6 +18,33 @@ use crate::epub::container::CONTAINER_XML;
 use crate::epub::content_opf::ContentOpf;
 use crate::util::zip::get_file_bytes;
 
+/// Represents an EPUB file and provides access to its components.
+///
+/// ## EPUB File Structure
+///
+/// ```ignore
+/// book.epub (ZIP archive)
+/// ├── mimetype                          # Must be FIRST, UNCOMPRESSED
+/// ├── META-INF/
+/// │   ├── container.xml                 # Points to OPF file location
+/// │   ├── encryption.xml                # (optional, DRM)
+/// │   └── rights.xml                    # (optional, DRM)
+/// ├── OEBPS/ (or EPUB/ or OPS/)        # Content directory (name varies)
+/// │   ├── content.opf                   # Package document (metadata, manifest, spine)
+/// │   ├── toc.ncx                       # Navigation (EPUB2) or nav.xhtml (EPUB3)
+/// │   ├── Text/                         # XHTML content files
+/// │   │   ├── chapter01.xhtml
+/// │   │   ├── chapter02.xhtml
+/// │   │   └── ...
+/// │   ├── Styles/
+/// │   │   └── stylesheet.css
+/// │   ├── Images/
+/// │   │   ├── cover.jpg
+/// │   │   └── ...
+/// │   └── Fonts/
+/// │       └── font.ttf
+/// └── ...
+/// ```
 #[derive(Debug)]
 pub struct Epub {
     #[allow(unused)]
@@ -44,6 +73,13 @@ impl Epub {
             toc,
             content_opf,
         })
+    }
+
+    pub fn unpackage<P: AsRef<Path>>(path: P, outdir: P) -> Result<PathBuf> {
+        let file = File::open(path)?;
+        let mut archive = ZipArchive::new(file)?;
+        archive.extract(&outdir)?;
+        Ok(outdir.as_ref().to_path_buf())
     }
 
     /// Returns the `dtb:uid` from the `toc.ncx` file, which is typically the ISBN of the EPUB.

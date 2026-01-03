@@ -4,5 +4,7 @@
 .DS_Store
 
 # Test Files
+*.pdf
 *.epub
+*.kepub
 *.ncx
