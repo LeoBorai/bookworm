@@ -34,27 +34,27 @@ impl SetOpt {
         let mut pdf = Pdf::open(&self.path)?;
 
         if let Some(title) = &self.title {
-            pdf.set_metadata(&PdfMetaField::Title, title)?;
+            pdf = pdf.set_metadata(&PdfMetaField::Title, title)?;
         }
 
         if let Some(author) = &self.author {
-            pdf.set_metadata(&PdfMetaField::Author, author)?;
+            pdf = pdf.set_metadata(&PdfMetaField::Author, author)?;
         }
 
         if let Some(creator) = &self.creator {
-            pdf.set_metadata(&PdfMetaField::Creator, creator)?;
+            pdf = pdf.set_metadata(&PdfMetaField::Creator, creator)?;
         }
 
         if let Some(producer) = &self.producer {
-            pdf.set_metadata(&PdfMetaField::Producer, producer)?;
+            pdf = pdf.set_metadata(&PdfMetaField::Producer, producer)?;
         }
 
         if let Some(creation_date) = &self.creation_date {
-            pdf.set_metadata(&PdfMetaField::CreationDate, creation_date)?;
+            pdf = pdf.set_metadata(&PdfMetaField::CreationDate, creation_date)?;
         }
 
         if let Some(modification_date) = &self.modification_date {
-            pdf.set_metadata(&PdfMetaField::ModificationDate, modification_date)?;
+            pdf = pdf.set_metadata(&PdfMetaField::ModificationDate, modification_date)?;
         }
 
         let next_path = self.path.with_file_name("set_info.pdf");

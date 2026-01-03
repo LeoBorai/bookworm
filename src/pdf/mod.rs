@@ -72,6 +72,7 @@ pub struct Pdf {
 impl Pdf {
     pub fn open<P: AsRef<Path>>(path: P) -> Result<Self> {
         let doc = Document::load(&path)?;
+
         Ok(Pdf {
             doc,
             path: path.as_ref().to_path_buf(),
@@ -110,23 +111,28 @@ impl Pdf {
             .map(|bytes| String::from_utf8_lossy(bytes).to_string())
     }
 
-    pub fn set_metadata(&mut self, field: &PdfMetaField, value: &str) -> Result<()> {
-        let info_id = if let Ok(info_ref) = self.doc.trailer.get(PDF_META_INFO_KEY) {
+    pub fn set_metadata(&self, field: &PdfMetaField, value: &str) -> Result<Pdf> {
+        let mut doc = self.doc.clone();
+
+        let info_id = if let Ok(info_ref) = doc.trailer.get(PDF_META_INFO_KEY) {
             match info_ref {
                 Object::Reference(id) => *id,
-                _ => Self::create_info_dictionary(&mut self.doc)?,
+                _ => Self::create_info_dictionary(&mut doc)?,
             }
         } else {
-            Self::create_info_dictionary(&mut self.doc)?
+            Self::create_info_dictionary(&mut doc)?
         };
 
-        if let Ok(info_obj) = self.doc.get_object_mut(info_id)
+        if let Ok(info_obj) = doc.get_object_mut(info_id)
             && let Ok(dict) = info_obj.as_dict_mut()
         {
             dict.set(field.as_bytes(), Object::string_literal(value));
         }
 
-        Ok(())
+        Ok(Self {
+            doc,
+            path: self.path.clone(),
+        })
     }
 
     pub fn save<P: AsRef<Path>>(&mut self, path: P) -> Result<()> {
