@@ -1,28 +1,24 @@
 mod info;
-mod package;
 mod unpackage;
 
+use anyhow::Result;
 use clap::Subcommand;
 
 use self::info::InfoOpt;
-use self::package::PackageOpt;
 use self::unpackage::UnPackageOpt;
 
 #[derive(Clone, Debug, Subcommand)]
 pub enum EpubCmd {
     /// Retrieve (K)Epub File Information
     Info(InfoOpt),
-    /// Package (K)Epub File
-    Pkg(PackageOpt),
     /// Unpackage (K)Epub File
     Unpkg(UnPackageOpt),
 }
 
 impl EpubCmd {
-    pub async fn exec(&self) -> anyhow::Result<()> {
+    pub async fn exec(&self) -> Result<()> {
         match self {
             Self::Info(cmd) => cmd.exec().await,
-            Self::Pkg(cmd) => cmd.exec().await,
             Self::Unpkg(cmd) => cmd.exec().await,
         }
     }
