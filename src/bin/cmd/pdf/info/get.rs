@@ -1,16 +1,17 @@
 use std::path::PathBuf;
 
 use anyhow::Result;
-use bookworm::pdf::Pdf;
 use clap::Args;
 
+use bookworm::pdf::Pdf;
+
 #[derive(Args, Clone, Debug)]
-pub struct InfoOpt {
+pub struct GetOpt {
     /// Path to the PDF file
     path: PathBuf,
 }
 
-impl InfoOpt {
+impl GetOpt {
     pub async fn exec(&self) -> Result<()> {
         let pdf = Pdf::open(&self.path)?;
         let info = pdf.metadata()?;
@@ -40,6 +41,7 @@ impl InfoOpt {
             info.modification_date
                 .unwrap_or_else(|| "Unknown".to_string())
         );
+        println!("PDF Version: {}", pdf.version());
 
         Ok(())
     }
