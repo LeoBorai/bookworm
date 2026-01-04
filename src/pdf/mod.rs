@@ -1,10 +1,7 @@
-use std::{
-    path::{Path, PathBuf},
-    str::FromStr,
-};
+use std::{path::Path, str::FromStr};
 
 use anyhow::Result;
-use lopdf::{Dictionary, Document, Object};
+use lopdf::{Document, Object};
 
 const PDF_META_INFO_KEY: &[u8] = b"Info";
 const PDF_META_TITLE_KEY: &[u8] = b"Title";
@@ -28,13 +25,13 @@ impl FromStr for PdfMetaField {
     type Err = ();
 
     fn from_str(input: &str) -> std::result::Result<PdfMetaField, Self::Err> {
-        match input {
-            "Title" => Ok(PdfMetaField::Title),
-            "Author" => Ok(PdfMetaField::Author),
-            "Creator" => Ok(PdfMetaField::Creator),
-            "Producer" => Ok(PdfMetaField::Producer),
-            "CreationDate" => Ok(PdfMetaField::CreationDate),
-            "ModificationDate" => Ok(PdfMetaField::ModificationDate),
+        match input.to_ascii_lowercase().as_str() {
+            "title" => Ok(PdfMetaField::Title),
+            "author" => Ok(PdfMetaField::Author),
+            "creator" => Ok(PdfMetaField::Creator),
+            "producer" => Ok(PdfMetaField::Producer),
+            "creationdate" => Ok(PdfMetaField::CreationDate),
+            "modificationdate" => Ok(PdfMetaField::ModificationDate),
             _ => Err(()),
         }
     }
@@ -66,17 +63,13 @@ pub struct PdfMetadata {
 #[derive(Debug)]
 pub struct Pdf {
     doc: Document,
-    path: PathBuf,
 }
 
 impl Pdf {
     pub fn open<P: AsRef<Path>>(path: P) -> Result<Self> {
         let doc = Document::load(&path)?;
 
-        Ok(Pdf {
-            doc,
-            path: path.as_ref().to_path_buf(),
-        })
+        Ok(Pdf { doc })
     }
 
     pub fn metadata(&self) -> Result<PdfMetadata> {
@@ -111,38 +104,26 @@ impl Pdf {
             .map(|bytes| String::from_utf8_lossy(bytes).to_string())
     }
 
-    pub fn set_metadata(&self, field: &PdfMetaField, value: &str) -> Result<Pdf> {
-        let mut doc = self.doc.clone();
-
-        let info_id = if let Ok(info_ref) = doc.trailer.get(PDF_META_INFO_KEY) {
-            match info_ref {
-                Object::Reference(id) => *id,
-                _ => Self::create_info_dictionary(&mut doc)?,
+    pub fn set_metadata(&mut self, field: &PdfMetaField, value: &str) -> Result<()> {
+        if let Ok(info) = self.doc.trailer.get_mut(PDF_META_INFO_KEY)
+            && let Some(dict) = match info {
+                Object::Dictionary(dict) => Some(dict),
+                Object::Reference(id) => self
+                    .doc
+                    .objects
+                    .get_mut(id)
+                    .and_then(|o| o.as_dict_mut().ok()),
+                _ => None,
             }
-        } else {
-            Self::create_info_dictionary(&mut doc)?
-        };
-
-        if let Ok(info_obj) = doc.get_object_mut(info_id)
-            && let Ok(dict) = info_obj.as_dict_mut()
         {
             dict.set(field.as_bytes(), Object::string_literal(value));
+            return Ok(());
         }
 
-        Ok(Self {
-            doc,
-            path: self.path.clone(),
-        })
+        anyhow::bail!("Info dictionary not found in PDF document");
     }
 
     pub fn save<P: AsRef<Path>>(&mut self, path: P) -> Result<()> {
         self.doc.save(&path)
-    }
-    fn create_info_dictionary(doc: &mut Document) -> Result<(u32, u16)> {
-        let info_dict = Dictionary::new();
-        let info_id = doc.add_object(Object::Dictionary(info_dict));
-        doc.trailer
-            .set(PDF_META_INFO_KEY, Object::Reference(info_id));
-        Ok(info_id)
     }
 }
