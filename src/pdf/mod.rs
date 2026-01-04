@@ -1,6 +1,7 @@
-use std::{path::Path, str::FromStr};
+use std::path::Path;
+use std::str::FromStr;
 
-use anyhow::Result;
+use anyhow::{Context, Result, bail};
 use lopdf::{Document, Object};
 
 const PDF_META_INFO_KEY: &[u8] = b"Info";
@@ -120,10 +121,13 @@ impl Pdf {
             return Ok(());
         }
 
-        anyhow::bail!("Info dictionary not found in PDF document");
+        bail!("Info dictionary not found in PDF document");
     }
 
     pub fn save<P: AsRef<Path>>(&mut self, path: P) -> Result<()> {
-        self.doc.save(&path)
+        self.doc
+            .save(&path)
+            .context("Failed to save PDF document")?;
+        Ok(())
     }
 }
