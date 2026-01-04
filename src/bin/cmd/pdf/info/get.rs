@@ -41,6 +41,7 @@ impl GetOpt {
             info.modification_date
                 .unwrap_or_else(|| "Unknown".to_string())
         );
+        println!("PDF Version: {}", pdf.version());
 
         Ok(())
     }

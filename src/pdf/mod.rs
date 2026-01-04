@@ -68,9 +68,25 @@ pub struct Pdf {
 
 impl Pdf {
     pub fn open<P: AsRef<Path>>(path: P) -> Result<Self> {
-        let doc = Document::load(&path)?;
+        let mut doc = Document::load(&path)?;
+
+        // https://github.com/J-F-Liu/lopdf/issues/453#issuecomment-3611121319
+        if doc.is_encrypted() {
+            match doc.decrypt("") {
+                Ok(_) => {
+                    doc.trailer.remove(b"Encrypt");
+                }
+                Err(e) => {
+                    eprintln!("Failed to decrypt. {e:?}");
+                }
+            }
+        }
 
         Ok(Pdf { doc })
+    }
+
+    pub fn version(&self) -> &String {
+        &self.doc.version
     }
 
     pub fn metadata(&self) -> Result<PdfMetadata> {
