@@ -11,3 +11,4 @@
 
 # Documentation
 !docs/**/*.pdf
+!fixtures/example.pdf
