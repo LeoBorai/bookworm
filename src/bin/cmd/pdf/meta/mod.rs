@@ -4,18 +4,18 @@ mod set;
 use anyhow::Result;
 use clap::Subcommand;
 
-use crate::cmd::pdf::info::get::GetOpt;
-use crate::cmd::pdf::info::set::SetOpt;
+use crate::cmd::pdf::meta::get::GetOpt;
+use crate::cmd::pdf::meta::set::SetOpt;
 
 #[derive(Clone, Debug, Subcommand)]
-pub enum InfoCmd {
-    /// Retrieve PDF File Information
+pub enum MetadataCmd {
+    /// Retrieve PDF file metadata
     Get(GetOpt),
-    /// Set PDF File Information
+    /// Update PDF file metadata
     Set(SetOpt),
 }
 
-impl InfoCmd {
+impl MetadataCmd {
     pub async fn exec(&self) -> Result<()> {
         match self {
             Self::Get(cmd) => cmd.exec().await,

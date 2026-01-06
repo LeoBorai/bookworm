@@ -7,15 +7,15 @@ use clap::Args;
 use bookworm::epub::Epub;
 
 #[derive(Args, Clone, Debug)]
-pub struct InfoOpt {
-    /// Path to the (K)Epub file
+pub struct GetOpt {
+    /// Path to the EPUB file
     path: PathBuf,
-    /// Renames the (K)Epub file
+    /// Renames the EPUB file with metadata info
     #[clap(long)]
     rename: bool,
 }
 
-impl InfoOpt {
+impl GetOpt {
     pub async fn exec(&self) -> Result<()> {
         let epub = Epub::open(&self.path)?;
         let content_opf = epub.content_opf();
