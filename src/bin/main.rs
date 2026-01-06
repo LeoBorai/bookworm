@@ -4,7 +4,8 @@ use anyhow::Result;
 
 use clap::Parser;
 
-use crate::cmd::{epub::EpubCmd, pdf::PdfCmd};
+use crate::cmd::epub::EpubCmd;
+use crate::cmd::pdf::PdfCmd;
 
 #[tokio::main]
 async fn main() -> Result<()> {
