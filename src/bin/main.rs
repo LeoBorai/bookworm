@@ -7,7 +7,7 @@ use clap::Parser;
 use crate::cmd::epub::EpubCmd;
 use crate::cmd::pdf::PdfCmd;
 
-#[tokio::main]
+#[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<()> {
     let cli = Cli::parse();
     cli.command.exec().await?;
