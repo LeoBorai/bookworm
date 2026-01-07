@@ -45,5 +45,10 @@ jobs:
       - name: Run Tests
         run: cargo test --all-features
 
+      - name: Install Linux System Dependencies
+        if: ${{ matrix.os == "ubuntu-latest" }}
+        run: |
+          sudo apt install gcc-aarch64-linux-gnu
+
       - name: Build Check
         run: cargo build --target ${{ matrix.target }}
