@@ -22,7 +22,7 @@ path = "src/lib.rs"
 [dependencies]
 anyhow = "1.0"
 clap = { version = "4.5", features = ["std", "derive", "env"] }
-getrandom = { version = "0.3", features = ["js"] }
+getrandom = { version = "0.3", features = ["wasm_js"] }
 lopdf = { version = "0.38", features = ["wasm_js"] }
 tokio = { version = "1.49", features = ["macros", "rt", "rt-multi-thread", "sync"] }
 xml-rs = "1.0"
