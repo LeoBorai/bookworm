@@ -125,7 +125,7 @@ dependencies = [
 
 [[package]]
 name = "bookworm"
-version = "1.0.0-pre.e2a645f"
+version = "1.0.0-pre.68e0936"
 dependencies = [
  "anyhow",
  "clap",
