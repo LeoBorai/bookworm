@@ -17,7 +17,7 @@ impl<W: Write + Seek> EpubWriter<W> {
         let zip_writer = ZipWriter::new(writer);
 
         if !source.is_dir() {
-            bail!("The source '{:?}' does't belongs to a directory", source)
+            bail!("The source '{:?}' doesn't belongs to a directory", source)
         }
 
         Ok(EpubWriter { source, zip_writer })

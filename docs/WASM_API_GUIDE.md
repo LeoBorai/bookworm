@@ -41,21 +41,27 @@ let epub = Epub::from_reader(cursor)?;
 use bookworm::epub::EpubWriter;
 use std::fs::File;
 
-let file = File::create("output.epub")?;
-let mut writer = EpubWriter::new(file, "source_directory")?;
-writer.write().await?;
+async fn create_epub() -> anyhow::Result<()> {
+    let file = File::create("output.epub")?;
+    let mut writer = EpubWriter::new(file, "source_directory")?;
+    writer.write().await?;
+    Ok(())
+}
 ```
 
 **Byte-based (new API for WASM/browser):**
 ```rust
 use bookworm::epub::EpubWriter;
 
-// Write to in-memory buffer
-let mut writer = EpubWriter::new_in_memory("source_directory")?;
-writer.write().await?;
-let epub_bytes = writer.into_bytes()?;
-
-// Now you can send epub_bytes over network, save to IndexedDB, etc.
+async fn create_epub_in_memory() -> anyhow::Result<Vec<u8>> {
+    // Write to in-memory buffer
+    let mut writer = EpubWriter::new_in_memory("source_directory")?;
+    writer.write().await?;
+    let epub_bytes = writer.into_bytes()?;
+    
+    // Now you can send epub_bytes over network, save to IndexedDB, etc.
+    Ok(epub_bytes)
+}
 ```
 
 ### PDF API
