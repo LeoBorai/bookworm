@@ -1,0 +1,27 @@
+[package]
+name = "bookworm"
+edition.workspace = true
+version.workspace = true
+authors.workspace = true
+description.workspace = true
+documentation.workspace = true
+
+[[bin]]
+name = "bookworm"
+path = "src/bin/main.rs"
+
+[lib]
+name = "bookworm"
+path = "src/lib.rs"
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true, features = ["std", "derive", "env"] }
+lopdf = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt", "sync"] }
+xml-rs = { workspace = true }
+zip = { workspace = true }
+
+[target.wasm32-unknown-unknown.dependencies]
+lopdf = { workspace = true, features = ["wasm_js"] }
+getrandom = { workspace = true, features = ["wasm_js"] }
