@@ -1,10 +1,9 @@
-use std::fs::File;
-use std::io::Read;
+use std::io::{Read, Seek};
 
 use anyhow::{Result, bail};
 use zip::ZipArchive;
 
-pub fn get_file_bytes(zip: &mut ZipArchive<File>, path: &str) -> Result<Vec<u8>> {
+pub fn get_file_bytes<R: Read + Seek>(zip: &mut ZipArchive<R>, path: &str) -> Result<Vec<u8>> {
     let mut file = zip.by_name(path)?;
 
     if !file.is_file() {

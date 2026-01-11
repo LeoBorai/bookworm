@@ -1,7 +1,7 @@
 mod doc_title;
 mod toc_meta;
 
-use std::fs::File;
+use std::io::{Read, Seek};
 
 use anyhow::{Result, bail};
 use zip::ZipArchive;
@@ -25,7 +25,7 @@ impl Toc {
         Ok(Self { meta, doc_title })
     }
 
-    pub fn resolve_toc_ncx_file(zip: &mut ZipArchive<File>) -> Result<String> {
+    pub fn resolve_toc_ncx_file<R: Read + Seek>(zip: &mut ZipArchive<R>) -> Result<String> {
         const TOP_LEVEL_TOC_PATH: &str = "toc.ncx";
         const DEFAULT_TOC_PATH: &str = "OEBPS/toc.ncx";
         const ALTERNATIVE_TOC_PATH: &str = "OPS/toc.ncx";

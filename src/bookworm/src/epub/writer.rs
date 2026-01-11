@@ -1,22 +1,23 @@
 use std::fs::File;
-use std::io::Write;
+use std::io::{Cursor, Seek, Write};
 use std::path::{Path, PathBuf};
 
 use anyhow::{Result, bail};
 use zip::write::{ExtendedFileOptions, FileOptions, ZipWriter};
 
-pub struct EpubWriter {
+pub struct EpubWriter<W: Write + Seek> {
     source: PathBuf,
-    zip_writer: ZipWriter<File>,
+    zip_writer: ZipWriter<W>,
 }
 
-impl EpubWriter {
-    pub fn new<P: AsRef<Path>>(file: File, source: P) -> Result<Self> {
+impl<W: Write + Seek> EpubWriter<W> {
+    /// Creates a new EpubWriter from a generic writer and source directory.
+    pub fn from_writer<P: AsRef<Path>>(writer: W, source: P) -> Result<Self> {
         let source = PathBuf::from(source.as_ref());
-        let zip_writer = ZipWriter::new(file);
+        let zip_writer = ZipWriter::new(writer);
 
         if !source.is_dir() {
-            bail!("The source '{:?}' does't belongs to a directory", source)
+            bail!("The source '{:?}' doesn't belongs to a directory", source)
         }
 
         Ok(EpubWriter { source, zip_writer })
@@ -67,5 +68,32 @@ impl EpubWriter {
         }
 
         Ok(())
+    }
+}
+
+impl EpubWriter<File> {
+    /// Creates a new EpubWriter that writes to a file.
+    ///
+    /// This is a convenience method for file-based operations.
+    pub fn new<P: AsRef<Path>>(file: File, source: P) -> Result<Self> {
+        Self::from_writer(file, source)
+    }
+}
+
+impl EpubWriter<Cursor<Vec<u8>>> {
+    /// Creates a new EpubWriter that writes to an in-memory buffer.
+    ///
+    /// This is useful for WASM/browser environments where file system access is not available.
+    pub fn new_in_memory<P: AsRef<Path>>(source: P) -> Result<Self> {
+        let cursor = Cursor::new(Vec::new());
+        Self::from_writer(cursor, source)
+    }
+
+    /// Consumes the writer and returns the byte buffer.
+    ///
+    /// This should be called after writing is complete to retrieve the EPUB bytes.
+    pub fn into_bytes(self) -> Result<Vec<u8>> {
+        let cursor = self.zip_writer.finish()?;
+        Ok(cursor.into_inner())
     }
 }
