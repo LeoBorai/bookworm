@@ -8,6 +8,7 @@ pub use toc::{Toc, TocMeta};
 pub use writer::EpubWriter;
 
 use std::fs::File;
+use std::io::{Cursor, Read, Seek};
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
@@ -46,18 +47,18 @@ use crate::util::zip::get_file_bytes;
 /// └── ...
 /// ```
 #[derive(Debug)]
-pub struct Epub {
+pub struct Epub<R: Read + Seek> {
     #[allow(unused)]
-    archive: Mutex<ZipArchive<File>>,
+    archive: Mutex<ZipArchive<R>>,
     mic: MetaInfContainer,
     toc: Toc,
     content_opf: ContentOpf,
 }
 
-impl Epub {
-    pub fn open<P: AsRef<Path>>(path: P) -> Result<Epub> {
-        let file = File::open(path)?;
-        let mut archive = ZipArchive::new(file)?;
+impl<R: Read + Seek> Epub<R> {
+    /// Creates an Epub from a generic reader (e.g., File, Cursor<Vec<u8>>).
+    pub fn from_reader(reader: R) -> Result<Epub<R>> {
+        let mut archive = ZipArchive::new(reader)?;
         let container_xml = get_file_bytes(&mut archive, CONTAINER_XML)?;
         let mic = MetaInfContainer::new(container_xml)?;
         let toc_ncx_path = Toc::resolve_toc_ncx_file(&mut archive)?;
@@ -75,13 +76,6 @@ impl Epub {
         })
     }
 
-    pub fn unpackage<P: AsRef<Path>>(path: P, outdir: P) -> Result<PathBuf> {
-        let file = File::open(path)?;
-        let mut archive = ZipArchive::new(file)?;
-        archive.extract(&outdir)?;
-        Ok(outdir.as_ref().to_path_buf())
-    }
-
     /// Returns the `dtb:uid` from the `toc.ncx` file, which is typically the ISBN of the EPUB.
     pub fn isbn(&self) -> &String {
         &self.toc.meta.uid
@@ -97,5 +91,32 @@ impl Epub {
 
     pub fn content_opf(&self) -> &ContentOpf {
         &self.content_opf
+    }
+}
+
+impl Epub<File> {
+    /// Opens an EPUB file from a file path.
+    ///
+    /// This is a convenience method for file-based operations.
+    pub fn open<P: AsRef<Path>>(path: P) -> Result<Epub<File>> {
+        let file = File::open(path)?;
+        Epub::from_reader(file)
+    }
+
+    pub fn unpackage<P: AsRef<Path>>(path: P, outdir: P) -> Result<PathBuf> {
+        let file = File::open(path)?;
+        let mut archive = ZipArchive::new(file)?;
+        archive.extract(&outdir)?;
+        Ok(outdir.as_ref().to_path_buf())
+    }
+}
+
+impl Epub<Cursor<Vec<u8>>> {
+    /// Creates an Epub from a byte vector.
+    ///
+    /// This is useful for WASM/browser environments where file system access is not available.
+    pub fn from_bytes(bytes: Vec<u8>) -> Result<Epub<Cursor<Vec<u8>>>> {
+        let cursor = Cursor::new(bytes);
+        Epub::from_reader(cursor)
     }
 }

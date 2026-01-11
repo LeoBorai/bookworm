@@ -1,3 +1,4 @@
+use std::io::Read;
 use std::path::Path;
 use std::str::FromStr;
 
@@ -67,9 +68,35 @@ pub struct Pdf {
 }
 
 impl Pdf {
+    /// Opens a PDF file from a file path.
+    ///
+    /// This is a convenience method for file-based operations.
     pub fn open<P: AsRef<Path>>(path: P) -> Result<Self> {
         let mut doc = Document::load(&path)?;
+        Self::decrypt_if_needed(&mut doc)?;
+        Ok(Pdf { doc })
+    }
 
+    /// Creates a Pdf from a byte slice.
+    ///
+    /// This is useful for WASM/browser environments where file system access is not available.
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
+        let mut doc = Document::load_mem(bytes)?;
+        Self::decrypt_if_needed(&mut doc)?;
+        Ok(Pdf { doc })
+    }
+
+    /// Creates a Pdf from a generic reader.
+    ///
+    /// This is useful when you have a custom source that implements Read.
+    pub fn from_reader<R: Read>(reader: R) -> Result<Self> {
+        let mut doc = Document::load_from(reader)?;
+        Self::decrypt_if_needed(&mut doc)?;
+        Ok(Pdf { doc })
+    }
+
+    /// Helper function to decrypt a PDF document if it's encrypted.
+    fn decrypt_if_needed(doc: &mut Document) -> Result<()> {
         // https://github.com/J-F-Liu/lopdf/issues/453#issuecomment-3611121319
         if doc.is_encrypted() {
             match doc.decrypt("") {
@@ -81,8 +108,7 @@ impl Pdf {
                 }
             }
         }
-
-        Ok(Pdf { doc })
+        Ok(())
     }
 
     pub fn version(&self) -> &String {
@@ -145,5 +171,16 @@ impl Pdf {
             .save(&path)
             .context("Failed to save PDF document")?;
         Ok(())
+    }
+
+    /// Saves the PDF document to a byte vector.
+    ///
+    /// This is useful for WASM/browser environments where file system access is not available.
+    pub fn save_to_bytes(&mut self) -> Result<Vec<u8>> {
+        let mut buffer = Vec::new();
+        self.doc
+            .save_to(&mut buffer)
+            .context("Failed to save PDF document to bytes")?;
+        Ok(buffer)
     }
 }
