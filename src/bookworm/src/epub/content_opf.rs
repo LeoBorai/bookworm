@@ -118,7 +118,10 @@ impl ContentOpf {
         Ok(content_opf)
     }
 
-    pub fn resolve_opf_file<R: Read + Seek>(zip: &mut ZipArchive<R>, mic: &MetaInfContainer) -> Result<String> {
+    pub fn resolve_opf_file<R: Read + Seek>(
+        zip: &mut ZipArchive<R>,
+        mic: &MetaInfContainer,
+    ) -> Result<String> {
         const TOP_LEVEL_OPF_PATH: &str = "content.opf";
         const DEFAULT_OPF_PATH: &str = "OEBPS/content.opf";
         const ALTERNATIVE_OPF_PATH: &str = "OPS/content.opf";

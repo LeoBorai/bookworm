@@ -12,7 +12,10 @@ fn main() -> Result<()> {
     println!("=== Byte-based PDF API Example ===\n");
 
     // Step 1: Read a PDF file into memory
-    let pdf_path = concat!(env!("CARGO_MANIFEST_DIR"), "/../../docs/Adobe PDF Manual.pdf");
+    let pdf_path = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../docs/Adobe PDF Manual.pdf"
+    );
     println!("Reading PDF from: {}", pdf_path);
     let bytes = fs::read(pdf_path)?;
     println!("Read {} bytes", bytes.len());
@@ -39,7 +42,10 @@ fn main() -> Result<()> {
     println!("\nSaving PDF to bytes...");
     let mut pdf_mut = Pdf::from_bytes(&bytes)?;
     let output_bytes = pdf_mut.save_to_bytes()?;
-    println!("✓ Successfully saved PDF to bytes ({} bytes)", output_bytes.len());
+    println!(
+        "✓ Successfully saved PDF to bytes ({} bytes)",
+        output_bytes.len()
+    );
 
     println!("\n=== Benefits for WASM/Browser ===");
     println!("• No file system access required");

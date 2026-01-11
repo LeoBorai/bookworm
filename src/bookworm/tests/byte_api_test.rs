@@ -7,7 +7,10 @@ use bookworm::pdf::Pdf;
 #[test]
 fn test_pdf_from_bytes() -> Result<()> {
     // Read a PDF file into memory
-    let pdf_path = concat!(env!("CARGO_MANIFEST_DIR"), "/../../docs/Adobe PDF Manual.pdf");
+    let pdf_path = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../docs/Adobe PDF Manual.pdf"
+    );
     let bytes = fs::read(pdf_path)?;
 
     // Create a Pdf from bytes
@@ -23,7 +26,10 @@ fn test_pdf_from_bytes() -> Result<()> {
 #[test]
 fn test_pdf_from_reader() -> Result<()> {
     // Read a PDF file into memory
-    let pdf_path = concat!(env!("CARGO_MANIFEST_DIR"), "/../../docs/Adobe PDF Manual.pdf");
+    let pdf_path = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../docs/Adobe PDF Manual.pdf"
+    );
     let bytes = fs::read(pdf_path)?;
 
     // Create a Pdf from a reader (Cursor in this case)
@@ -40,7 +46,10 @@ fn test_pdf_from_reader() -> Result<()> {
 #[test]
 fn test_pdf_save_to_bytes() -> Result<()> {
     // Read a PDF file into memory
-    let pdf_path = concat!(env!("CARGO_MANIFEST_DIR"), "/../../docs/Adobe PDF Manual.pdf");
+    let pdf_path = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../docs/Adobe PDF Manual.pdf"
+    );
     let bytes = fs::read(pdf_path)?;
 
     // Create a Pdf from bytes
