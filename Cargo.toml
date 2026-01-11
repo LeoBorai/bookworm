@@ -1,8 +1,12 @@
-[package]
-name = "bookworm"
-edition = "2024"
-version = "1.0.0-pre.a000f11"
+[workspace]
+members = ["./src/*"]
+default-members = ["src/bookworm"]
+resolver = "3"
+
+[workspace.package]
 authors = ["Leo Borai <estebanborai@gmail.com>"]
+version = "1.0.0-pre.a000f11"
+edition = "2024"
 categories = ["web-programming"]
 description = "Utilities to manage your ebook collection (PDFs, ePubs, KePubs, and more)"
 documentation = "https://docs.rs/bookworm"
@@ -11,22 +15,12 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/LeoBorai/bookworm"
 readme = "./README.md"
 
-[[bin]]
-name = "bookworm"
-path = "src/bin/main.rs"
 
-[lib]
-name = "bookworm"
-path = "src/lib.rs"
-
-[dependencies]
+[workspace.dependencies]
 anyhow = "1.0"
-clap = { version = "4.5", features = ["std", "derive", "env"] }
+clap = "4.5"
+getrandom = "0.3"
 lopdf = "0.38"
-tokio = { version = "1.49", features = ["macros", "rt", "sync"] }
+tokio = "1.49"
 xml-rs = "1.0"
 zip = "7"
-
-[target.wasm32-unknown-unknown.dependencies]
-lopdf = { version = "0.38", features = ["wasm_js"] }
-getrandom = { version = "0.3", features = ["wasm_js"] }
