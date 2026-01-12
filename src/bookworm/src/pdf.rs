@@ -1,6 +1,6 @@
-use std::{fs::File, io::Read};
 use std::path::Path;
 use std::str::FromStr;
+use std::{fs::File, io::Read};
 
 use anyhow::{Context, Result, bail};
 use lopdf::{Document, Object};
