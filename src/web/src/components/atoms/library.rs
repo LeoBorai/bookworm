@@ -42,10 +42,18 @@ pub fn Library() -> impl IntoView {
                                     };
                                     view! {
                                         <tr on:click=handle_click>
-                                            <td class="px-4 py-3 text-sm text-neutral-500 mono">{book.id}</td>
-                                            <td class="px-4 py-3 text-sm text-neutral-200 font-medium">{book.title}</td>
-                                            <td class="px-4 py-3 text-sm text-neutral-400">{book.author}</td>
-                                            <td class="px-4 py-3 text-sm text-neutral-500 mono">{book.date}</td>
+                                            <td class="px-4 py-3 text-sm text-neutral-500 mono">
+                                                {book.id}
+                                            </td>
+                                            <td class="px-4 py-3 text-sm text-neutral-200 font-medium">
+                                                {book.title}
+                                            </td>
+                                            <td class="px-4 py-3 text-sm text-neutral-400">
+                                                {book.author}
+                                            </td>
+                                            <td class="px-4 py-3 text-sm text-neutral-500 mono">
+                                                {book.date}
+                                            </td>
                                         </tr>
                                     }
                                 }
