@@ -13,7 +13,7 @@ pub struct Book {
 
 #[derive(Clone, Debug)]
 pub struct BooksContext {
-    pub library: RwSignal<Vec<Book>>,
+    pub library: RwSignal<Vec<(Book, Bytes)>>,
 }
 
 impl Default for BooksContext {
@@ -24,4 +24,10 @@ impl Default for BooksContext {
     }
 }
 
-impl BooksContext {}
+impl BooksContext {
+    pub fn add_to_library(&self, book: Book) {
+        let mut current_library = self.library.get();
+        current_library.push(book);
+        self.library.set(current_library);
+    }
+}

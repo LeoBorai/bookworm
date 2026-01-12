@@ -1,6 +1,7 @@
 use leptos::prelude::*;
 
 use crate::components::atoms::book_info::BookInfo;
+use crate::components::atoms::file_upload_button::FileUploadButton;
 use crate::components::atoms::library::Library;
 use crate::hooks::app::use_stage;
 use crate::hooks::books::use_staged_book;
@@ -29,28 +30,34 @@ pub fn Manager() -> impl IntoView {
                 <header class="bg-neutral-900/50 border-b border-neutral-800/50 p-4 glass-effect">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h1 class="text-3xl font-bold tracking-tight bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+                            <h1 class="text-2xl font-bold tracking-tight bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
                                 "Bookworm"
                             </h1>
-                            <p class="text-xs text-neutral-500 mt-1 mono">
-                                "v1.0.0.pre • Leo Borai"
+                            <p class="text-xs space-x-0.5 text-neutral-500 mt-1 mono">
+                                <code>
+                                "v1.0.0.pre"
+                                </code>
+                                 <i>"•"</i>
+                                <span>"Leo Borai"</span>
                             </p>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <button class="p-2 hover:bg-neutral-800/50 rounded-lg transition-all group">
-                                <svg
-                                    class="w-5 h-5 text-neutral-400 group-hover:text-violet-400 transition-colors"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                    ></path>
-                                </svg>
+                            <button id="upload-button">
+                                <FileUploadButton class="p-2 hover:bg-neutral-800/50 rounded-lg transition-all group">
+                                    <svg
+                                        class="w-5 h-5 text-neutral-400 group-hover:text-violet-400 transition-colors"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                        ></path>
+                                    </svg>
+                                </FileUploadButton>
                             </button>
                             <button class="p-2 hover:bg-neutral-800/50 rounded-lg transition-all group">
                                 <svg

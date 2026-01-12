@@ -15,12 +15,20 @@ panic = "abort"
 
 [dependencies]
 anyhow = { workspace = true }
+bytes = { workspace = true }
 console_error_panic_hook = { workspace = true }
 console_log = { workspace = true }
 leptos = { workspace = true, features = ["csr"] }
 leptos_meta = { workspace = true }
 leptos_router = { workspace = true }
 log = { workspace = true }
+web-sys = { workspace = true, features = [
+    "Event",
+    "HtmlInputElement",
+    "File",
+    "FileList",
+] }
+
 
 bookworm = { workspace = true }
 

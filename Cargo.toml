@@ -18,6 +18,7 @@ readme = "./README.md"
 
 [workspace.dependencies]
 anyhow = "1.0"
+bytes = "1.11"
 clap = "4.5"
 console_error_panic_hook = "0.1"
 console_log = "1"
@@ -30,6 +31,7 @@ lopdf = "0.38"
 memmap2 = "0.9"
 tokio = "1.49"
 wasm-bindgen-test = "0.3"
+web-sys = "0.3"
 xml-rs = "1.0"
 zip = { version = "7", default-features = false }
 
