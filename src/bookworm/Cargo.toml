@@ -18,6 +18,7 @@ path = "src/lib.rs"
 anyhow = { workspace = true }
 clap = { workspace = true, features = ["std", "derive", "env"] }
 lopdf = { workspace = true }
+memmap2 = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt", "sync"] }
 xml-rs = { workspace = true }
 zip = { workspace = true }
