@@ -3,7 +3,7 @@ use std::str::FromStr;
 use std::{fs::File, io::Read};
 
 use anyhow::{Context, Result, bail};
-use lopdf::{Document, Object};
+use lopdf::{Dictionary, Document, Object};
 use memmap2::Mmap;
 
 const PDF_META_INFO_KEY: &[u8] = b"Info";
@@ -66,6 +66,7 @@ pub struct PdfMetadata {
 #[derive(Debug)]
 pub struct Pdf {
     doc: Document,
+    info: Option<Dictionary>,
 }
 
 impl Pdf {
@@ -77,7 +78,8 @@ impl Pdf {
         let mmap = unsafe { Mmap::map(&file)? };
         let mut doc = Document::load_mem(&mmap)?;
         Self::decrypt_if_needed(&mut doc)?;
-        Ok(Pdf { doc })
+        let info = Self::get_info_dict(&doc);
+        Ok(Pdf { doc, info })
     }
 
     /// Creates a Pdf from a byte slice.
@@ -86,7 +88,8 @@ impl Pdf {
     pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
         let mut doc = Document::load_mem(bytes)?;
         Self::decrypt_if_needed(&mut doc)?;
-        Ok(Pdf { doc })
+        let info = Self::get_info_dict(&doc);
+        Ok(Pdf { doc, info })
     }
 
     /// Creates a Pdf from a generic reader.
@@ -95,7 +98,8 @@ impl Pdf {
     pub fn from_reader<R: Read>(reader: R) -> Result<Self> {
         let mut doc = Document::load_from(reader)?;
         Self::decrypt_if_needed(&mut doc)?;
-        Ok(Pdf { doc })
+        let info = Self::get_info_dict(&doc);
+        Ok(Pdf { doc, info })
     }
 
     /// Helper function to decrypt a PDF document if it's encrypted.
@@ -130,7 +134,18 @@ impl Pdf {
     }
 
     fn get_metadata_field(&self, field: &PdfMetaField) -> Option<String> {
-        let doc = &self.doc;
+        if let Some(ref info) = self.info {
+            return info
+                .get(field.as_bytes())
+                .ok()
+                .and_then(|value| value.as_str().ok())
+                .map(|bytes| String::from_utf8_lossy(bytes).to_string());
+        }
+
+        None
+    }
+
+    fn get_info_dict(doc: &Document) -> Option<Dictionary> {
         let info_ref = doc.trailer.get(PDF_META_INFO_KEY).ok()?;
         let object_id = match info_ref {
             lopdf::Object::Reference(id) => *id,
@@ -144,10 +159,7 @@ impl Pdf {
         let info_obj = doc.get_object(object_id).ok()?;
         let dict = info_obj.as_dict().ok()?;
 
-        dict.get(field.as_bytes())
-            .ok()
-            .and_then(|value| value.as_str().ok())
-            .map(|bytes| String::from_utf8_lossy(bytes).to_string())
+        Some(dict.to_owned())
     }
 
     pub fn set_metadata(&mut self, field: &PdfMetaField, value: &str) -> Result<()> {
