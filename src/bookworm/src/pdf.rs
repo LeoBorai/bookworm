@@ -1,9 +1,10 @@
-use std::io::Read;
 use std::path::Path;
 use std::str::FromStr;
+use std::{fs::File, io::Read};
 
 use anyhow::{Context, Result, bail};
 use lopdf::{Document, Object};
+use memmap2::Mmap;
 
 const PDF_META_INFO_KEY: &[u8] = b"Info";
 const PDF_META_TITLE_KEY: &[u8] = b"Title";
@@ -72,7 +73,9 @@ impl Pdf {
     ///
     /// This is a convenience method for file-based operations.
     pub fn open<P: AsRef<Path>>(path: P) -> Result<Self> {
-        let mut doc = Document::load(&path)?;
+        let file = File::open(path)?;
+        let mmap = unsafe { Mmap::map(&file)? };
+        let mut doc = Document::load_mem(&mmap)?;
         Self::decrypt_if_needed(&mut doc)?;
         Ok(Pdf { doc })
     }
