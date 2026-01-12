@@ -1,6 +1,7 @@
 use leptos::prelude::RwSignal;
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Book {
     pub id: u32,
     pub title: String,
@@ -13,7 +14,7 @@ pub struct Book {
 
 #[derive(Clone, Debug)]
 pub struct BooksContext {
-    pub library: RwSignal<Vec<(Book, Bytes)>>,
+    pub library: RwSignal<Vec<Book>>,
 }
 
 impl Default for BooksContext {
@@ -21,13 +22,5 @@ impl Default for BooksContext {
         Self {
             library: RwSignal::new(Vec::default()),
         }
-    }
-}
-
-impl BooksContext {
-    pub fn add_to_library(&self, book: Book) {
-        let mut current_library = self.library.get();
-        current_library.push(book);
-        self.library.set(current_library);
     }
 }

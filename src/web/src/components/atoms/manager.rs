@@ -34,10 +34,8 @@ pub fn Manager() -> impl IntoView {
                                 "Bookworm"
                             </h1>
                             <p class="text-xs space-x-0.5 text-neutral-500 mt-1 mono">
-                                <code>
-                                "v1.0.0.pre"
-                                </code>
-                                 <i>"•"</i>
+                                <code>"v1.0.0.pre"</code>
+                                <i>"•"</i>
                                 <span>"Leo Borai"</span>
                             </p>
                         </div>
