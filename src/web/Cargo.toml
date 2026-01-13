@@ -1,0 +1,43 @@
+[package]
+name = "bookworm-web"
+publish = false
+edition.workspace = true
+version.workspace = true
+authors.workspace = true
+description.workspace = true
+documentation.workspace = true
+
+[profile.release]
+opt-level = 'z'
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[dependencies]
+anyhow = { workspace = true }
+bytes = { workspace = true }
+console_error_panic_hook = { workspace = true }
+console_log = { workspace = true }
+js-sys = { workspace = true }
+leptos = { workspace = true, features = ["csr"] }
+leptos_meta = { workspace = true }
+leptos_router = { workspace = true }
+log = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+wasm-bindgen = { workspace = true }
+wasm-bindgen-futures = { workspace = true }
+web-sys = { workspace = true, features = [
+    "Event",
+    "HtmlInputElement",
+    "File",
+    "FileList",
+    "Worker",
+    "WorkerOptions",
+    "WorkerType"
+] }
+
+
+bookworm = { workspace = true }
+
+[dev-dependencies]
+wasm-bindgen-test = { workspace = true }

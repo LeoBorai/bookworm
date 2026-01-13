@@ -1,5 +1,9 @@
 /target
 
+# Web
+dist
+node_modules
+
 # System
 .DS_Store
 

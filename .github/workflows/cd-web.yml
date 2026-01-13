@@ -1,0 +1,37 @@
+name: Web Application Continuous Delivery
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release-web:
+    name: Release Web
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Rust Cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Setup Cargo Binstall
+        uses: cargo-bins/cargo-binstall@main
+
+      - name: Install Rust Binaries
+        run: |
+          cargo binstall -y --force just
+          cargo binstall -y --force leptosfmt
+          cargo binstall -y --force trunk
+
+      - name: Build for Release
+        run: just web-release
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: pages deploy ./src/web/dist --project-name=${{ secrets.CLOUDFLARE_PAGES_PROJECT_NAME }} --branch=main

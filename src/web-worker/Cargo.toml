@@ -1,0 +1,30 @@
+[package]
+name = "web-worker"
+publish = false
+edition.workspace = true
+version.workspace = true
+authors.workspace = true
+description.workspace = true
+documentation.workspace = true
+
+[profile.release]
+opt-level = 'z'
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+anyhow = { workspace = true }
+bookworm = { workspace = true }
+js-sys = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+web-sys = { workspace = true, features = [
+    "DedicatedWorkerGlobalScope",
+    "File",
+    "MessageEvent",
+] }
+wasm-bindgen = { workspace = true }
+wasm-bindgen-futures = { workspace = true }

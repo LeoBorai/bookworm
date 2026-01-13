@@ -21,8 +21,9 @@ lopdf = { workspace = true }
 memmap2 = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt", "sync"] }
 xml-rs = { workspace = true }
-zip = { workspace = true }
+zip = { workspace = true, features = ["default"] }
 
 [target.wasm32-unknown-unknown.dependencies]
 lopdf = { workspace = true, features = ["wasm_js"] }
 getrandom = { workspace = true, features = ["wasm_js"] }
+zip = { workspace = true }
