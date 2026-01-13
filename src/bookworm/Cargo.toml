@@ -1,10 +1,15 @@
 [package]
 name = "bookworm"
-edition.workspace = true
-version.workspace = true
 authors.workspace = true
+version.workspace = true
+edition.workspace = true
+categories.workspace = true
 description.workspace = true
 documentation.workspace = true
+keywords.workspace = true
+license.workspace = true
+repository.workspace = true
+readme.workspace = true
 
 [[bin]]
 name = "bookworm"
