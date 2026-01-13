@@ -24,6 +24,7 @@ jobs:
           cargo binstall -y --force just
           cargo binstall -y --force leptosfmt
           cargo binstall -y --force trunk
+          cargo binstall -y --force wasm-pack
 
       - name: Build for Release
         run: just web-release
