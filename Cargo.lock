@@ -215,12 +215,13 @@ dependencies = [
 
 [[package]]
 name = "bookworm"
-version = "1.0.0-pre.68e0936"
+version = "1.0.0-pre.441d4e4"
 dependencies = [
  "anyhow",
  "clap",
  "getrandom",
  "lopdf",
+ "memmap2",
  "tokio",
  "xml-rs",
  "zip",
@@ -228,7 +229,7 @@ dependencies = [
 
 [[package]]
 name = "bookworm-web"
-version = "1.0.0-pre.68e0936"
+version = "1.0.0-pre.441d4e4"
 dependencies = [
  "anyhow",
  "bookworm",
@@ -1504,6 +1505,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32a282da65faaf38286cf3be983213fcf1d2e2a58700e808f83f4ea9a4804bc0"
 
 [[package]]
+name = "memmap2"
+version = "0.9.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "744133e4a0e0a658e1374cf3bf8e415c4052a15a111acd372764c55b4177d490"
+dependencies = [
+ "libc",
+]
+
+[[package]]
 name = "minicov"
 version = "0.3.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2774,6 +2784,16 @@ checksum = "9b32828d774c412041098d182a8b38b16ea816958e07cf40eec2bc080ae137ac"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
+]
+
+[[package]]
+name = "web-worker"
+version = "1.0.0-pre.441d4e4"
+dependencies = [
+ "js-sys",
+ "serde",
+ "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]
