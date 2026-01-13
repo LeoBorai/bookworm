@@ -17,10 +17,14 @@ panic = "abort"
 crate-type = ["cdylib"]
 
 [dependencies]
+anyhow = { workspace = true }
+bookworm = { workspace = true }
 js-sys = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 web-sys = { workspace = true, features = [
     "DedicatedWorkerGlobalScope",
+    "File",
     "MessageEvent",
 ] }
-wasm-bindgen = "0.2"
+wasm-bindgen = { workspace = true }
+wasm-bindgen-futures = { workspace = true }

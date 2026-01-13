@@ -2790,9 +2790,12 @@ dependencies = [
 name = "web-worker"
 version = "1.0.0-pre.441d4e4"
 dependencies = [
+ "anyhow",
+ "bookworm",
  "js-sys",
  "serde",
  "wasm-bindgen",
+ "wasm-bindgen-futures",
  "web-sys",
 ]
 
