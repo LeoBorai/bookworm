@@ -24,7 +24,7 @@ impl Toc {
 
         let cursor = Cursor::new(bytes);
         let xml_reader = EventReader::new(cursor);
-        
+
         let mut uid = String::new();
         let mut title = String::new();
         let mut in_doc_title = false;
