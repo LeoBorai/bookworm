@@ -38,9 +38,9 @@ pub struct ContentOpf {
 
 impl ContentOpf {
     pub fn new(bytes: Vec<u8>) -> Result<ContentOpf> {
-        let xml_str = String::from_utf8(bytes)
-            .map_err(|e| anyhow::anyhow!("Failed to convert bytes to string: {}", e))?;
-        let xml_reader = EventReader::from_str(&xml_str);
+        // Parse XML directly from bytes using a Cursor instead of converting to String first
+        let cursor = std::io::Cursor::new(bytes);
+        let xml_reader = EventReader::new(cursor);
 
         let mut content_opf = ContentOpf {
             metadata: Metadata::default(),
@@ -128,23 +128,18 @@ impl ContentOpf {
 
         let opf_path = mic.rootfiles[0].full_path.to_str();
 
-        if let Some(opf_path) = opf_path
-            && opf_path.ends_with("opf")
-            && zip.by_name(opf_path).is_ok()
-        {
-            return Ok(opf_path.to_string());
-        }
+        // Check all possible paths in order, returning the first valid one
+        let paths_to_check = [
+            opf_path.filter(|p| p.ends_with("opf")),
+            Some(DEFAULT_OPF_PATH),
+            Some(ALTERNATIVE_OPF_PATH),
+            Some(TOP_LEVEL_OPF_PATH),
+        ];
 
-        if zip.by_name(DEFAULT_OPF_PATH).is_ok() {
-            return Ok(DEFAULT_OPF_PATH.to_string());
-        }
-
-        if zip.by_name(ALTERNATIVE_OPF_PATH).is_ok() {
-            return Ok(ALTERNATIVE_OPF_PATH.to_string());
-        }
-
-        if zip.by_name(TOP_LEVEL_OPF_PATH).is_ok() {
-            return Ok(TOP_LEVEL_OPF_PATH.to_string());
+        for path in paths_to_check.iter().flatten() {
+            if zip.by_name(path).is_ok() {
+                return Ok((*path).to_string());
+            }
         }
 
         bail!("Failed to resolve OPF file path")
