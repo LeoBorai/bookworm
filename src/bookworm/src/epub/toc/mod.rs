@@ -29,6 +29,7 @@ impl Toc {
         let mut title = String::new();
         let mut in_doc_title = false;
 
+        // Parse XML, silently skipping errors (consistent with original implementation)
         for event in xml_reader.into_iter().flatten() {
             match event {
                 XmlEvent::StartElement {
@@ -52,9 +53,13 @@ impl Toc {
                     }
                 }
                 XmlEvent::Characters(text) => {
-                    if in_doc_title {
+                    if in_doc_title && !text.trim().is_empty() {
                         title = text;
                         in_doc_title = false;
+                        // Continue parsing to get uid if we haven't found it yet
+                        if !uid.is_empty() {
+                            break; // We have both values, can exit early
+                        }
                     }
                 }
                 XmlEvent::EndElement { name } => {

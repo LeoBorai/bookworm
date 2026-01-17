@@ -4,6 +4,10 @@ use std::time::Instant;
 use anyhow::Result;
 use bookworm::pdf::Pdf;
 
+// Expected PDF parsing rate: approximately 10MB per second
+// This is a conservative estimate for reasonable performance on typical hardware
+const EXPECTED_PARSE_RATE_BYTES_PER_SEC: usize = 10_000_000;
+
 /// Test that verifies PDF metadata retrieval performance.
 /// This test ensures that metadata retrieval is reasonably fast once the PDF is loaded.
 #[test]
@@ -87,7 +91,7 @@ fn test_pdf_from_bytes_efficiency() -> Result<()> {
 
     // PDF parsing should be reasonably fast relative to file size
     // For a ~22MB file, should complete in under 2 seconds
-    let max_duration_secs = ((initial_size / 10_000_000) as u64).max(2);
+    let max_duration_secs = ((initial_size / EXPECTED_PARSE_RATE_BYTES_PER_SEC) as u64).max(2);
     assert!(
         duration.as_secs() < max_duration_secs,
         "PDF parsing took {}ms for {}MB file, expected < {}s",
