@@ -13,7 +13,8 @@ pub fn get_file_bytes<R: Read + Seek>(zip: &mut ZipArchive<R>, path: &str) -> Re
         );
     }
 
-    let mut buffer = Vec::new();
+    // Pre-allocate buffer based on file size to avoid incremental growing
+    let mut buffer = Vec::with_capacity(file.size() as usize);
     file.read_to_end(&mut buffer)?;
 
     Ok(buffer)

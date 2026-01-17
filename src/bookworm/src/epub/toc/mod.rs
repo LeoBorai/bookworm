@@ -17,12 +17,59 @@ pub struct Toc {
 }
 
 impl Toc {
-    /// Parses the `OEBPS/toc.ncx` file and extracts.
+    /// Parses the `OEBPS/toc.ncx` file and extracts metadata and document title in a single pass.
     pub fn new(bytes: Vec<u8>) -> Result<Toc> {
-        let meta = TocMeta::try_from(bytes.clone())?;
-        let doc_title = DocTitle::try_from(bytes.clone())?;
+        use std::io::Cursor;
+        use xml::{EventReader, reader::XmlEvent};
 
-        Ok(Self { meta, doc_title })
+        let cursor = Cursor::new(bytes);
+        let xml_reader = EventReader::new(cursor);
+        
+        let mut uid = String::new();
+        let mut title = String::new();
+        let mut in_doc_title = false;
+
+        for event in xml_reader.into_iter().flatten() {
+            match event {
+                XmlEvent::StartElement {
+                    name, attributes, ..
+                } => {
+                    if name.local_name == "meta" {
+                        let name_attr = attributes
+                            .iter()
+                            .find(|attr| attr.name.local_name == "name");
+                        let content_attr = attributes
+                            .iter()
+                            .find(|attr| attr.name.local_name == "content");
+
+                        if let (Some(name), Some(content)) = (name_attr, content_attr)
+                            && name.value == "dtb:uid"
+                        {
+                            uid = content.value.clone();
+                        }
+                    } else if name.local_name == "docTitle" {
+                        in_doc_title = true;
+                    }
+                }
+                XmlEvent::Characters(text) => {
+                    if in_doc_title {
+                        title = text;
+                        in_doc_title = false;
+                    }
+                }
+                XmlEvent::EndElement { name } => {
+                    if name.local_name == "ncx" {
+                        break; // End of the toc.ncx file
+                    }
+                }
+                _ => {}
+            }
+        }
+
+        Ok(Self {
+            meta: TocMeta { uid },
+            doc_title: DocTitle { title },
+        })
     }
 
     pub fn resolve_toc_ncx_file<R: Read + Seek>(zip: &mut ZipArchive<R>) -> Result<String> {
