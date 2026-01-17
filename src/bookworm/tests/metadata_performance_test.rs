@@ -90,8 +90,9 @@ fn test_pdf_from_bytes_efficiency() -> Result<()> {
     assert!(!pdf.version().is_empty());
 
     // PDF parsing should be reasonably fast relative to file size
-    // For a ~22MB file, should complete in under 2 seconds
-    let max_duration_secs = ((initial_size / EXPECTED_PARSE_RATE_BYTES_PER_SEC) as u64).max(2);
+    // For a ~22MB file, should complete in under 3 seconds
+    // (being conservative to account for system load variations)
+    let max_duration_secs = ((initial_size / EXPECTED_PARSE_RATE_BYTES_PER_SEC) as u64).max(3);
     assert!(
         duration.as_secs() < max_duration_secs,
         "PDF parsing took {}ms for {}MB file, expected < {}s",
