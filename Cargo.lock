@@ -215,7 +215,7 @@ dependencies = [
 
 [[package]]
 name = "bookworm"
-version = "1.0.0-pre.23578e8"
+version = "1.0.0-pre.e656e5d"
 dependencies = [
  "anyhow",
  "clap",
@@ -229,7 +229,7 @@ dependencies = [
 
 [[package]]
 name = "bookworm-web"
-version = "1.0.0-pre.23578e8"
+version = "1.0.0-pre.e656e5d"
 dependencies = [
  "anyhow",
  "bookworm",
@@ -2788,7 +2788,7 @@ dependencies = [
 
 [[package]]
 name = "web-worker"
-version = "1.0.0-pre.23578e8"
+version = "1.0.0-pre.e656e5d"
 dependencies = [
  "anyhow",
  "bookworm",
