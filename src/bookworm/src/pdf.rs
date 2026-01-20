@@ -2,7 +2,7 @@ use std::path::Path;
 use std::str::FromStr;
 use std::{fs::File, io::Read};
 
-use anyhow::{Context, Result, bail};
+use anyhow::{Context, Result};
 use lopdf::{Document, Object};
 use memmap2::Mmap;
 
@@ -166,7 +166,15 @@ impl Pdf {
             return Ok(());
         }
 
-        bail!("Info dictionary not found in PDF document");
+        let mut new_info_dict = lopdf::Dictionary::new();
+        new_info_dict.set(field.as_bytes(), Object::string_literal(value));
+
+        let id = self.doc.add_object(Object::Dictionary(new_info_dict));
+        self.doc
+            .trailer
+            .set(PDF_META_INFO_KEY, Object::Reference(id));
+
+        Ok(())
     }
 
     pub fn save<P: AsRef<Path>>(&mut self, path: P) -> Result<()> {
