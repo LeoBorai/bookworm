@@ -5,7 +5,7 @@ resolver = "3"
 
 [workspace.package]
 authors = ["Leo Borai <estebanborai@gmail.com>"]
-version = "1.0.0-pre.e656e5d"
+version = "1.0.0-pre.7f8de74"
 edition = "2024"
 categories = ["web-programming"]
 description = "Utilities to manage your ebook collection (PDFs, ePubs, KePubs, and more)"
