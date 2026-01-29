@@ -15,3 +15,5 @@ node_modules
 
 # Documentation
 !docs/**/*.pdf
+!fixtures/**/*.pdf
+!fixtures/**/*.epub
