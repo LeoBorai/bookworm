@@ -37,6 +37,6 @@ wasm-bindgen-futures = "0.4"
 wasm-bindgen-test = "0.3"
 web-sys = "0.3"
 xml-rs = "1.0"
-zip = { version = "7", default-features = false }
+zip = { version = "8", default-features = false }
 
 bookworm = { path = "src/bookworm" }
