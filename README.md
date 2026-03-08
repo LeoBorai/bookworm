@@ -24,3 +24,7 @@ You can also download precompiled binaries from the [GitHub Releases](https://gi
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
 This project is also licensed under the Apache License 2.0 - see the [LICENSE-APACHE](LICENSE-APACHE.md) file for details.
+
+### Sample Files
+
+- EPUB Sample files are copied from [EPUB 3 Samples Table](https://idpf.github.io/epub3-samples/30/samples.html)
